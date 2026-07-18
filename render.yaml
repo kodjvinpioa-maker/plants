@@ -1,0 +1,9 @@
+# render.yaml — configuration automatique pour Render.com
+# Force la détection Node.js et définit les commandes de build/démarrage.
+services:
+  - type: web
+    name: viny-plantes
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
