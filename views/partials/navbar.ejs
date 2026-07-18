@@ -1,0 +1,61 @@
+<% if (currentUser) { %>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/dashboard">
+      <i class="fa-solid fa-leaf"></i> Viny Plantes
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Ouvrir le menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link py-3 py-lg-2" href="/dashboard"><i class="fa-solid fa-gauge-high"></i> Tableau de bord</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-3 py-lg-2" href="/produits"><i class="fa-solid fa-box"></i> Produits</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-3 py-lg-2" href="/ventes/nouvelle"><i class="fa-solid fa-cart-shopping"></i> Nouvelle vente</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle py-3 py-lg-2" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-boxes-stacked"></i> Stock
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/stock/entree"><i class="fa-solid fa-arrow-down text-success"></i> Entrée manuelle</a></li>
+            <li><a class="dropdown-item" href="/stock/sortie"><i class="fa-solid fa-arrow-up text-danger"></i> Sortie manuelle</a></li>
+            <li><a class="dropdown-item" href="/stock/historique"><i class="fa-solid fa-clock-rotate-left"></i> Historique stock</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle py-3 py-lg-2" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-money-bill"></i> Caisse
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/caisse"><i class="fa-solid fa-wallet"></i> Solde &amp; caisse</a></li>
+            <li><a class="dropdown-item" href="/caisse/entree"><i class="fa-solid fa-arrow-down text-success"></i> Entrée caisse</a></li>
+            <li><a class="dropdown-item" href="/caisse/sortie"><i class="fa-solid fa-arrow-up text-danger"></i> Sortie caisse</a></li>
+            <li><a class="dropdown-item" href="/caisse/historique"><i class="fa-solid fa-clock-rotate-left"></i> Historique caisse</a></li>
+          </ul>
+        </li>
+        <% if (currentUser.role === 'admin') { %>
+        <li class="nav-item">
+          <a class="nav-link py-3 py-lg-2" href="/users"><i class="fa-solid fa-users"></i> Utilisateurs</a>
+        </li>
+        <% } %>
+      </ul>
+      <span class="navbar-text text-white-50 me-3 d-none d-lg-inline">
+        <i class="fa-solid fa-user"></i> <%= currentUser.email %>
+        <span class="badge bg-secondary ms-1"><%= currentUser.role %></span>
+      </span>
+      <form action="/logout" method="POST" class="d-inline">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-outline-light btn-sm w-100 mt-2 mt-lg-0">
+          <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+        </button>
+      </form>
+    </div>
+  </div>
+</nav>
+<% } %>

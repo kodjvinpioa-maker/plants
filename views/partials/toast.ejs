@@ -1,0 +1,40 @@
+<!-- Conteneur de notifications toast (Bootstrap) -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1080;"></div>
+
+<script>
+  // Messages de succès affichés via ?success=xxx dans l'URL
+  const TOAST_MESSAGES = {
+    creation: 'Créé avec succès.',
+    modification: 'Modifié avec succès.',
+    statut: 'Statut mis à jour.',
+    vente: 'Vente enregistrée avec succès.',
+    entree: 'Entrée enregistrée avec succès.',
+    sortie: 'Sortie enregistrée avec succès.',
+    annulation: 'Vente annulée avec succès.',
+  };
+
+  function showToast(message, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const bg = type === 'success' ? 'text-bg-success' : 'text-bg-danger';
+    const el = document.createElement('div');
+    el.className = `toast align-items-center ${bg} border-0`;
+    el.setAttribute('role', 'alert');
+    el.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body"><i class="fa-solid fa-circle-check me-2"></i>${message}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fermer"></button>
+      </div>`;
+    container.appendChild(el);
+    const toast = new bootstrap.Toast(el, { delay: 4000 });
+    toast.show();
+    el.addEventListener('hidden.bs.toast', () => el.remove());
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const success = params.get('success');
+    if (success && TOAST_MESSAGES[success]) {
+      showToast(TOAST_MESSAGES[success]);
+    }
+  });
+</script>

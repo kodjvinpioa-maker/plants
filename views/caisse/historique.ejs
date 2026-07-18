@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <%- include('../partials/head', { title: 'Historique de caisse' }) %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container-fluid py-4 px-3 px-md-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <h3 class="mb-0"><i class="fa-solid fa-clock-rotate-left"></i> Historique de caisse</h3>
+      <a class="btn btn-outline-success" href="/caisse/historique/export.csv?<%= new URLSearchParams(filters).toString() %>">
+        <i class="fa-solid fa-file-csv"></i> Export CSV
+      </a>
+    </div>
+
+    <!-- Filtres -->
+    <form method="GET" action="/caisse/historique" class="card shadow-sm border-0 mb-3">
+      <div class="card-body row g-2 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small">Type</label>
+          <select name="type" class="form-select">
+            <option value="">Tous</option>
+            <option value="entree" <%= filters.type === 'entree' ? 'selected' : '' %>>Entrée</option>
+            <option value="sortie" <%= filters.type === 'sortie' ? 'selected' : '' %>>Sortie</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Du</label>
+          <input type="date" name="date_debut" class="form-control" value="<%= filters.date_debut || '' %>">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Au</label>
+          <input type="date" name="date_fin" class="form-control" value="<%= filters.date_fin || '' %>">
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-filter"></i> Filtrer</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="card shadow-sm border-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th><th>Type</th><th>Motif</th><th>Montant</th><th>Utilisateur</th><th>Commentaire</th><th>Lié à une vente</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (mouvements.length === 0) { %>
+              <tr><td colspan="7" class="text-center text-muted py-4">Aucun mouvement trouvé</td></tr>
+            <% } %>
+            <% mouvements.forEach(m => { %>
+              <tr>
+                <td class="small"><%= new Date(m.date_mouvement).toLocaleString('fr-FR') %></td>
+                <td>
+                  <% if (m.type === 'entree') { %>
+                    <span class="badge bg-success">Entrée</span>
+                  <% } else { %>
+                    <span class="badge bg-danger">Sortie</span>
+                  <% } %>
+                </td>
+                <td><%= m.motif %></td>
+                <td><%= m.montant.toLocaleString('fr-FR') %> F</td>
+                <td class="small"><%= m.user_email || '—' %></td>
+                <td class="small"><%= m.commentaire || '—' %></td>
+                <td><% if (m.est_lie_vente) { %><span class="badge bg-info text-dark">Vente</span><% } else { %>—<% } %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../partials/toast') %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

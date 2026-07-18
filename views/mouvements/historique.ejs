@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <%- include('../partials/head', { title: 'Historique des mouvements de stock' }) %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container-fluid py-4 px-3 px-md-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <h3 class="mb-0"><i class="fa-solid fa-clock-rotate-left"></i> Historique des mouvements de stock</h3>
+      <a class="btn btn-outline-success" href="/stock/historique/export.csv?<%= new URLSearchParams(filters).toString() %>">
+        <i class="fa-solid fa-file-csv"></i> Export CSV
+      </a>
+    </div>
+
+    <!-- Filtres -->
+    <form method="GET" action="/stock/historique" class="card shadow-sm border-0 mb-3">
+      <div class="card-body row g-2 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small">Produit</label>
+          <select name="produit_id" class="form-select">
+            <option value="">Tous</option>
+            <% produits.forEach(p => { %>
+              <option value="<%= p.id %>" <%= filters.produit_id == p.id ? 'selected' : '' %>><%= p.nom %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Type</label>
+          <select name="type" class="form-select">
+            <option value="">Tous</option>
+            <option value="entree" <%= filters.type === 'entree' ? 'selected' : '' %>>Entrée</option>
+            <option value="sortie" <%= filters.type === 'sortie' ? 'selected' : '' %>>Sortie</option>
+            <option value="vente" <%= filters.type === 'vente' ? 'selected' : '' %>>Vente</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Du</label>
+          <input type="date" name="date_debut" class="form-control" value="<%= filters.date_debut || '' %>">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Au</label>
+          <input type="date" name="date_fin" class="form-control" value="<%= filters.date_fin || '' %>">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Utilisateur</label>
+          <select name="user_id" class="form-select">
+            <option value="">Tous</option>
+            <% users.forEach(u => { %>
+              <option value="<%= u.id %>" <%= filters.user_id == u.id ? 'selected' : '' %>><%= u.email %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-filter"></i></button>
+        </div>
+      </div>
+    </form>
+
+    <div class="card shadow-sm border-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Type</th>
+              <th>Produit</th>
+              <th>Référence</th>
+              <th>Quantité</th>
+              <th>Prix vente effectif</th>
+              <th>Date</th>
+              <th>Utilisateur</th>
+              <th>Commentaire</th>
+              <% if (currentUser.role === 'admin') { %><th>Actions</th><% } %>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (mouvements.length === 0) { %>
+              <tr><td colspan="9" class="text-center text-muted py-4">Aucun mouvement trouvé</td></tr>
+            <% } %>
+            <% mouvements.forEach(m => { %>
+              <tr>
+                <td>
+                  <% if (m.type === 'entree') { %>
+                    <span class="badge bg-success">Entrée</span>
+                  <% } else if (m.type === 'sortie') { %>
+                    <span class="badge bg-warning text-dark">Sortie</span>
+                  <% } else { %>
+                    <span class="badge bg-primary">Vente</span>
+                  <% } %>
+                </td>
+                <td><%= m.produit_nom || '—' %></td>
+                <td><%= m.produit_reference || '—' %></td>
+                <td><%= m.quantite %></td>
+                <td><%= m.prix_vente_effectif != null ? m.prix_vente_effectif.toLocaleString('fr-FR') + ' F' : '—' %></td>
+                <td class="small"><%= new Date(m.date_mouvement).toLocaleString('fr-FR') %></td>
+                <td class="small"><%= m.user_email || '—' %></td>
+                <td class="small"><%= m.commentaire || '—' %></td>
+                <% if (currentUser.role === 'admin') { %>
+                <td>
+                  <% if (m.type === 'vente') { %>
+                    <form method="POST" action="/stock/vente/<%= m.id %>/annuler" onsubmit="return confirm('Confirmer l\'annulation de cette vente ? Le mouvement de caisse lié sera aussi supprimé.');">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-rotate-left"></i> Annuler</button>
+                    </form>
+                  <% } %>
+                </td>
+                <% } %>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../partials/toast') %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

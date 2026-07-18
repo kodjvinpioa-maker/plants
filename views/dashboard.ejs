@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <%- include('partials/head', { title: 'Tableau de bord' }) %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="container-fluid py-4 px-3 px-md-4">
+    <h3 class="mb-4"><i class="fa-solid fa-gauge-high"></i> Tableau de bord</h3>
+
+    <!-- Cartes indicateurs -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-body d-flex align-items-center">
+            <i class="fa-solid fa-box fa-2x text-primary me-3"></i>
+            <div>
+              <div class="text-muted small">Produits actifs</div>
+              <div class="fs-3 fw-bold"><%= totalProduits %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card shadow-sm border-0 h-100 <%= totalAlertes > 0 ? 'border-danger' : '' %>">
+          <div class="card-body d-flex align-items-center">
+            <i class="fa-solid fa-triangle-exclamation fa-2x text-danger me-3"></i>
+            <div>
+              <div class="text-muted small">Produits en alerte</div>
+              <div class="fs-3 fw-bold text-danger"><%= totalAlertes %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-body d-flex align-items-center">
+            <i class="fa-solid fa-money-bill fa-2x text-success me-3"></i>
+            <div>
+              <div class="text-muted small">Solde de la caisse</div>
+              <div class="fs-3 fw-bold text-success"><%= soldeCaisse.toLocaleString('fr-FR') %> F</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Boutons rapides -->
+    <div class="d-flex flex-wrap gap-2 mb-4">
+      <a href="/ventes/nouvelle" class="btn btn-primary btn-lg flex-fill"><i class="fa-solid fa-cart-shopping"></i> Nouvelle vente</a>
+      <a href="/stock/entree" class="btn btn-success btn-lg flex-fill"><i class="fa-solid fa-arrow-down"></i> Entrée stock</a>
+      <a href="/stock/sortie" class="btn btn-warning btn-lg flex-fill"><i class="fa-solid fa-arrow-up"></i> Sortie stock</a>
+      <a href="/caisse/entree" class="btn btn-outline-success btn-lg flex-fill"><i class="fa-solid fa-plus"></i> Entrée caisse</a>
+      <a href="/caisse/sortie" class="btn btn-outline-danger btn-lg flex-fill"><i class="fa-solid fa-minus"></i> Sortie caisse</a>
+    </div>
+
+    <div class="row g-3">
+      <!-- Derniers mouvements de stock -->
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-header bg-white"><i class="fa-solid fa-clock-rotate-left"></i> 5 derniers mouvements de stock</div>
+          <div class="table-responsive">
+            <table class="table table-sm mb-0">
+              <thead>
+                <tr><th>Type</th><th>Produit</th><th>Qté</th><th>Date</th></tr>
+              </thead>
+              <tbody>
+                <% if (derniersMouvements.length === 0) { %>
+                  <tr><td colspan="4" class="text-center text-muted py-3">Aucun mouvement enregistré</td></tr>
+                <% } %>
+                <% derniersMouvements.forEach(m => { %>
+                  <tr>
+                    <td>
+                      <% if (m.type === 'entree') { %>
+                        <span class="badge bg-success">Entrée</span>
+                      <% } else if (m.type === 'sortie') { %>
+                        <span class="badge bg-warning text-dark">Sortie</span>
+                      <% } else { %>
+                        <span class="badge bg-primary">Vente</span>
+                      <% } %>
+                    </td>
+                    <td><%= m.produit_nom || '—' %></td>
+                    <td><%= m.quantite %></td>
+                    <td class="small text-muted"><%= new Date(m.date_mouvement).toLocaleString('fr-FR') %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top 5 produits en alerte -->
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-header bg-white"><i class="fa-solid fa-triangle-exclamation text-danger"></i> Produits les plus en alerte</div>
+          <div class="table-responsive">
+            <table class="table table-sm mb-0">
+              <thead>
+                <tr><th>Produit</th><th>Stock</th><th>Seuil</th></tr>
+              </thead>
+              <tbody>
+                <% if (top5Alertes.length === 0) { %>
+                  <tr><td colspan="3" class="text-center text-muted py-3">Aucune alerte actuellement</td></tr>
+                <% } %>
+                <% top5Alertes.forEach(p => { %>
+                  <tr class="table-danger">
+                    <td><%= p.nom %></td>
+                    <td><%= p.stock_actuel %></td>
+                    <td><%= p.seuil_alerte %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('partials/toast') %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

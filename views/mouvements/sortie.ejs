@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <%- include('../partials/head', { title: 'Sortie manuelle de stock' }) %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container py-4">
+    <h3 class="mb-4 text-warning"><i class="fa-solid fa-arrow-up"></i> Sortie manuelle de stock</h3>
+    <p class="text-muted">Utilisez ce formulaire pour les pertes, casses ou prélèvements (hors vente).</p>
+
+    <% if (error) { %>
+      <div class="alert alert-danger"><i class="fa-solid fa-triangle-exclamation"></i> <%= error %></div>
+    <% } %>
+
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <form method="POST" action="/stock/sortie">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+          <div class="mb-3">
+            <label class="form-label">Produit *</label>
+            <select name="produit_id" id="produitSelect" class="form-select" required>
+              <option value="">-- Sélectionner un produit --</option>
+              <% produits.forEach(p => { %>
+                <option value="<%= p.id %>" data-stock="<%= p.stock_actuel %>"><%= p.nom %> (<%= p.reference %>) — stock: <%= p.stock_actuel %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Quantité *</label>
+              <input type="number" step="0.01" name="quantite" class="form-control" min="0.01" value="1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Date et heure</label>
+              <input type="datetime-local" name="date_mouvement" class="form-control" value="<%= now %>">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Commentaire (optionnel)</label>
+            <textarea name="commentaire" class="form-control" rows="2" placeholder="Ex : casse, perte, prélèvement interne"></textarea>
+          </div>
+
+          <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-warning btn-lg"><i class="fa-solid fa-check"></i> Enregistrer la sortie</button>
+            <a href="/dashboard" class="btn btn-outline-secondary btn-lg">Annuler</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../partials/toast') %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
