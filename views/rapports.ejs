@@ -1,0 +1,120 @@
+<h1><i class="fa fa-chart-bar"></i> Rapports</h1>
+
+<div class="card">
+  <form method="GET" action="/rapports">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>Période</label>
+    <select name="periode" onchange="handlePeriode(this.value)">
+      <option value="">Personnalisé</option>
+      <option value="aujourdhui">Aujourd'hui</option>
+      <option value="semaine">Cette semaine</option>
+      <option value="mois">Ce mois</option>
+    </select>
+    <div id="dates-perso" style="display: flex; gap: 10px;">
+      <div>
+        <label>Date début</label>
+        <input type="date" name="debut" value="<%= locals.debut || '' %>">
+      </div>
+      <div>
+        <label>Date fin</label>
+        <input type="date" name="fin" value="<%= locals.fin || '' %>">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Afficher</button>
+  </form>
+</div>
+
+<% if (data && data.length) { %>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+    <div class="card">
+      <h3>Nombre de ventes</h3>
+      <p style="font-size:2em;"><%= data.reduce((sum, d) => sum + d.nb_ventes, 0) %></p>
+    </div>
+    <div class="card">
+      <h3>Chiffre d'affaires</h3>
+      <p style="font-size:2em;"><%= data.reduce((sum, d) => sum + d.ca, 0).toLocaleString() %> FCFA</p>
+    </div>
+    <div class="card">
+      <h3>Bénéfice brut</h3>
+      <p style="font-size:2em;"><%= data.reduce((sum, d) => sum + (d.ca - d.cout), 0).toLocaleString() %> FCFA</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <canvas id="chartCA" height="100"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>Détail par jour</h3>
+    <table>
+      <tr><th>Date</th><th>Ventes</th><th>CA (FCFA)</th><th>Coût (FCFA)</th><th>Bénéfice (FCFA)</th></tr>
+      <% data.forEach(d => { %>
+        <tr>
+          <td><%= d.date_mouvement %></td>
+          <td><%= d.nb_ventes %></td>
+          <td><%= d.ca.toLocaleString() %></td>
+          <td><%= d.cout.toLocaleString() %></td>
+          <td><%= (d.ca - d.cout).toLocaleString() %></td>
+        </tr>
+      <% }) %>
+    </table>
+  </div>
+
+  <a href="/rapports/export?debut=<%= debut || '' %>&fin=<%= fin || '' %>" class="btn btn-success">Exporter CSV</a>
+
+  <script>
+    const ctx = document.getElementById('chartCA').getContext('2d');
+    const labels = [<% data.forEach(d => { %> '<%= d.date_mouvement %>', <% }) %>];
+    const caData = [<% data.forEach(d => { %> <%= d.ca %>, <% }) %>];
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Chiffre d\'affaires (FCFA)',
+          data: caData,
+          borderColor: '#4A7C59',
+          backgroundColor: 'rgba(74,124,89,0.1)',
+          fill: true
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  </script>
+<% } else { %>
+  <div class="card">
+    <p>Aucune donnée pour la période sélectionnée.</p>
+  </div>
+<% } %>
+
+<script>
+  function handlePeriode(val) {
+    const datesDiv = document.getElementById('dates-perso');
+    const now = new Date();
+    let debut = '', fin = '';
+    if (val === 'aujourdhui') {
+      debut = fin = now.toISOString().slice(0,10);
+      datesDiv.style.display = 'none';
+    } else if (val === 'semaine') {
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+      debut = startOfWeek.toISOString().slice(0,10);
+      fin = now.toISOString().slice(0,10);
+      datesDiv.style.display = 'none';
+    } else if (val === 'mois') {
+      debut = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
+      fin = now.toISOString().slice(0,10);
+      datesDiv.style.display = 'none';
+    } else {
+      datesDiv.style.display = 'flex';
+    }
+    if (val) {
+      document.querySelector('input[name="debut"]').value = debut;
+      document.querySelector('input[name="fin"]').value = fin;
+    }
+  }
+</script>
