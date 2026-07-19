@@ -1,0 +1,58 @@
+<h1><i class="fa fa-history"></i> Journal d'activité</h1>
+
+<div class="card">
+  <form method="GET" action="/journal" style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div>
+      <label>Utilisateur</label>
+      <select name="user_id">
+        <option value="">Tous</option>
+        <% users && users.forEach(u => { %>
+          <option value="<%= u.id %>" <%= request.query.user_id == u.id ? 'selected' : '' %>><%= u.email %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div>
+      <label>Action</label>
+      <select name="action">
+        <option value="">Toutes</option>
+        <option value="Vente">Vente</option>
+        <option value="Entrée stock">Entrée stock</option>
+        <option value="Sortie stock">Sortie stock</option>
+        <option value="Annulation vente">Annulation vente</option>
+        <option value="Création utilisateur">Création utilisateur</option>
+        <option value="Clôture automatique">Clôture automatique</option>
+        <option value="Modification produit">Modification produit</option>
+      </select>
+    </div>
+    <div>
+      <label>Date début</label>
+      <input type="date" name="debut" value="<%= locals.debut || '' %>">
+    </div>
+    <div>
+      <label>Date fin</label>
+      <input type="date" name="fin" value="<%= locals.fin || '' %>">
+    </div>
+    <button type="submit" class="btn btn-primary">Filtrer</button>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <tr><th>Date/Heure</th><th>Utilisateur</th><th>Action</th><th>Description</th></tr>
+    <% if (logs && logs.length) { %>
+      <% logs.forEach(log => { %>
+        <tr>
+          <td><%= new Date(log.created_at).toLocaleString() %></td>
+          <td><%= log.email %></td>
+          <td><%= log.action %></td>
+          <td><%= log.description %></td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr><td colspan="4">Aucune activité enregistrée.</td></tr>
+    <% } %>
+  </table>
+</div>
+
+<a href="/journal/export?user_id=<%= request.query.user_id || '' %>&action=<%= request.query.action || '' %>&debut=<%= debut || '' %>&fin=<%= fin || '' %>" class="btn btn-success">Exporter CSV</a>
