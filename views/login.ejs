@@ -1,44 +1,14 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <%- include('partials/head', { title: 'Connexion' }) %>
-</head>
-<body class="bg-light">
-  <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
-    <div class="card shadow-sm" style="max-width: 420px; width: 100%;">
-      <div class="card-body p-4">
-        <div class="text-center mb-4">
-          <i class="fa-solid fa-seedling fa-3x login-plante-icone"></i>
-          <h4 class="mt-3 mb-0">Viny Plantes</h4>
-          <p class="text-muted small"><i class="fa-solid fa-leaf fa-xs"></i> Gestion du stock &amp; de la caisse <i class="fa-solid fa-leaf fa-xs"></i></p>
-        </div>
-
-        <% if (error) { %>
-          <div class="alert alert-danger py-2"><i class="fa-solid fa-triangle-exclamation"></i> <%= error %></div>
-        <% } %>
-
-        <form method="POST" action="/login">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control form-control-lg" required autofocus placeholder="vous@example.com">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Mot de passe</label>
-            <input type="password" name="password" class="form-control form-control-lg" required placeholder="••••••••">
-          </div>
-          <button type="submit" class="btn btn-primary btn-lg w-100">
-            <i class="fa-solid fa-right-to-bracket"></i> Se connecter
-          </button>
-        </form>
-
-        <hr>
-        <p class="small text-muted mb-1"><strong>Comptes de test :</strong></p>
-        <p class="small text-muted mb-0">Admin : admin@example.com / admin123</p>
-        <p class="small text-muted">Collaborateur : collab@example.com / collab123</p>
-      </div>
-    </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<div class="card" style="max-width: 450px; margin: 80px auto;">
+  <h2 style="text-align:center;"><i class="fa fa-leaf"></i> Connexion</h2>
+  <% if (locals.error) { %>
+    <div class="alert-stock" style="padding:10px; margin-bottom:15px;"><%= error %></div>
+  <% } %>
+  <form method="POST" action="/login">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>Email</label>
+    <input type="email" name="email" placeholder="admin@example.com" required>
+    <label>Mot de passe</label>
+    <input type="password" name="password" placeholder="Mot de passe" required>
+    <button type="submit" class="btn btn-primary" style="width:100%;">Se connecter</button>
+  </form>
+</div>
