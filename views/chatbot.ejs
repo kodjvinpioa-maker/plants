@@ -1,0 +1,25 @@
+<div class="card">
+  <h2><i class="fa fa-leaf"></i> Assistant Plantes</h2>
+  <div id="chat-box" style="max-height: 400px; overflow-y: auto; border: 1px solid var(--primary); padding: 10px; border-radius: 10px; margin-bottom: 10px;"></div>
+  <div class="input-group">
+    <input type="text" id="question" class="form-control" placeholder="Posez une question sur les plantes...">
+    <button class="btn btn-primary" onclick="askChatbot()">Demander</button>
+  </div>
+</div>
+
+<script>
+async function askChatbot() {
+  const question = document.getElementById('question').value;
+  const chatBox = document.getElementById('chat-box');
+  chatBox.innerHTML += `<p><strong>Vous:</strong> ${question}</p>`;
+  document.getElementById('question').value = '';
+  const resp = await fetch('/api/chatbot', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'CSRF-Token': '<%= csrfToken %>' },
+    body: JSON.stringify({ question })
+  });
+  const data = await resp.json();
+  chatBox.innerHTML += `<p><strong>Assistant:</strong> ${data.answer}</p>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+</script>
