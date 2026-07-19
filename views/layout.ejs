@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌿 MaBoutique</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="navbar-brand" href="/dashboard">🏪 MaBoutique</a>
+    <span style="color:white;">
+      <% if (user) { %>
+        <a class="nav-link" href="/dashboard"><i class="fa fa-home"></i> Accueil</a>
+        <a class="nav-link" href="/produits"><i class="fa fa-box"></i> Produits</a>
+        <a class="nav-link" href="/vente"><i class="fa fa-cash-register"></i> Vente</a>
+        <a class="nav-link" href="/stock"><i class="fa fa-dolly"></i> Stock</a>
+        <a class="nav-link" href="/caisse"><i class="fa fa-coins"></i> Caisse</a>
+        <% if (user.role === 'admin') { %>
+          <a class="nav-link" href="/rapports"><i class="fa fa-chart-bar"></i> Rapports</a>
+          <a class="nav-link" href="/journal"><i class="fa fa-history"></i> Journal</a>
+          <a class="nav-link" href="/utilisateurs"><i class="fa fa-users"></i> Utilisateurs</a>
+        <% } %>
+        <a class="nav-link" href="/chatbot"><i class="fa fa-leaf"></i> Assistant Plantes</a>
+        <a class="nav-link" href="/logout"><i class="fa fa-sign-out-alt"></i> Déconnexion</a>
+      <% } else { %>
+        <a class="nav-link" href="/login">Connexion</a>
+      <% } %>
+    </span>
+  </nav>
+
+  <div class="container" style="max-width: 1200px; margin: auto; padding: 20px;">
+    <%- body %>
+  </div>
+
+  <div id="toast" class="toast">Message</div>
+  <script>
+    // Affichage toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.background = type === 'success' ? '#388E3C' : '#D32F2F';
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 3000);
+    }
+  </script>
+</body>
+</html>
