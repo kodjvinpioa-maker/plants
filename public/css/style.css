@@ -1,246 +1,84 @@
-/* ==========================================================================
-   style.css — Thème botanique chic (vert & blanc)
-   Boutique de plantes : palette verte, typographie élégante, animations douces
-   ========================================================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap');
 
 :root {
-  --vert-fonce: #1b4332;
-  --vert: #2d6a4f;
-  --vert-moyen: #40916c;
-  --vert-clair: #74c69d;
-  --vert-pale: #d8f3dc;
-  --vert-tres-pale: #f0faf2;
-  --creme: #fdfffc;
-  --or-doux: #c9a227;
+  --primary: #4A7C59;
+  --primary-light: #7CB342;
+  --cream: #FFF8F0;
+  --white: #FAFAF5;
+  --text: #3E2723;
+  --danger: #D32F2F;
+  --warning: #F9A825;
+  --success: #388E3C;
+  --radius: 15px;
+  --btn-radius: 25px;
+  --shadow: 0 2px 8px rgba(74,124,89,0.15);
 }
 
 body {
-  background: linear-gradient(160deg, var(--vert-tres-pale) 0%, #ffffff 45%, var(--vert-pale) 100%);
-  background-attachment: fixed;
-  font-family: 'Poppins', sans-serif;
-  color: #22332b;
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
+  background-color: var(--cream);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234A7C59' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  font-family: 'Lato', sans-serif;
+  color: var(--text);
+  margin: 0;
+  padding-top: 70px;
 }
 
-h1, h2, h3, h4, .navbar-brand {
-  font-family: 'Playfair Display', serif;
-}
+h1, h2, h3, .navbar-brand { font-family: 'Poppins', sans-serif; }
 
-/* --------------------------------------------------------------------------
-   Navbar : dégradé vert élégant
-   -------------------------------------------------------------------------- */
-.navbar.bg-dark {
-  background: linear-gradient(90deg, var(--vert-fonce) 0%, var(--vert) 60%, var(--vert-moyen) 100%) !important;
-  box-shadow: 0 2px 16px rgba(27, 67, 50, 0.25);
-}
-.navbar-brand {
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-.navbar-brand .fa-leaf {
-  color: var(--vert-clair);
-  animation: sway 3s ease-in-out infinite;
-  display: inline-block;
-  transform-origin: bottom center;
-}
-.navbar .nav-link {
-  border-radius: 0.5rem;
-  transition: background 0.25s ease, transform 0.2s ease;
-}
-.navbar .nav-link:hover {
-  background: rgba(216, 243, 220, 0.15);
-  transform: translateY(-1px);
-}
-
-/* --------------------------------------------------------------------------
-   Boutons : verts, arrondis, effets chics
-   -------------------------------------------------------------------------- */
-.btn {
-  border-radius: 2rem;
-  transition: all 0.25s ease;
-  position: relative;
-  overflow: hidden;
-}
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(45, 106, 79, 0.25);
-}
-.btn:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--vert) 0%, var(--vert-moyen) 100%);
-  border: none;
-}
-.btn-primary:hover, .btn-primary:focus {
-  background: linear-gradient(135deg, var(--vert-fonce) 0%, var(--vert) 100%);
-}
-.btn-success {
-  background: linear-gradient(135deg, var(--vert-moyen) 0%, var(--vert-clair) 100%);
-  border: none;
-}
-.btn-outline-primary { color: var(--vert); border-color: var(--vert); }
-.btn-outline-primary:hover { background: var(--vert); border-color: var(--vert); }
-.btn-outline-success { color: var(--vert-moyen); border-color: var(--vert-moyen); }
-.btn-outline-success:hover { background: var(--vert-moyen); border-color: var(--vert-moyen); }
-
-/* Surlignage vert/blanc au clic : effet "ripple" géré par plants.js */
-.ripple-effect {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(116,198,157,0.6) 60%, transparent 100%);
-  transform: scale(0);
-  animation: ripple 0.65s ease-out forwards;
-  pointer-events: none;
-  z-index: 5;
-}
-@keyframes ripple {
-  to { transform: scale(3.5); opacity: 0; }
-}
-
-/* Surlignage vert pâle temporaire sur les cellules/lignes cliquées */
-.clic-surligne {
-  animation: surligneVert 0.9s ease-out;
-}
-@keyframes surligneVert {
-  0%   { background-color: var(--vert-pale); box-shadow: inset 0 0 0 2px var(--vert-clair); }
-  100% { background-color: transparent; box-shadow: none; }
-}
-
-/* --------------------------------------------------------------------------
-   Cartes : blanches, arrondies, ombre douce, survol délicat
-   -------------------------------------------------------------------------- */
-.card {
-  border-radius: 1.25rem;
-  border: 1px solid rgba(45, 106, 79, 0.08);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(4px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(27, 67, 50, 0.12);
-}
-.card-header {
-  border-radius: 1.25rem 1.25rem 0 0 !important;
-  background: var(--vert-tres-pale) !important;
-  border-bottom: 1px solid var(--vert-pale);
-  font-weight: 500;
-  color: var(--vert-fonce);
-}
-
-/* Cartes indicateurs du tableau de bord */
-.card .fa-2x {
-  transition: transform 0.3s ease;
-}
-.card:hover .fa-2x {
-  transform: scale(1.15) rotate(-5deg);
-}
-.text-primary { color: var(--vert) !important; }
-.text-success { color: var(--vert-moyen) !important; }
-.bg-success-subtle { background: linear-gradient(135deg, var(--vert-pale), #ffffff) !important; }
-
-/* --------------------------------------------------------------------------
-   Tableaux : élégants, lignes en alerte roses douces
-   -------------------------------------------------------------------------- */
-.table {
-  --bs-table-hover-bg: var(--vert-tres-pale);
-}
-.table thead.table-light th {
-  background: var(--vert-tres-pale);
-  color: var(--vert-fonce);
-  font-weight: 600;
-  border-bottom: 2px solid var(--vert-pale);
-}
-.table-danger {
-  --bs-table-bg: #fdeef0;
-}
-.badge.bg-success { background: var(--vert-moyen) !important; }
-.badge.bg-primary { background: var(--vert) !important; }
-
-/* --------------------------------------------------------------------------
-   Feuilles flottantes décoratives (générées par plants.js)
-   -------------------------------------------------------------------------- */
-.feuille-flottante {
+.navbar {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border-radius: 0 0 20px 20px;
+  box-shadow: var(--shadow);
+  padding: 10px 20px;
   position: fixed;
-  top: -40px;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.5;
-  color: var(--vert-clair);
-  animation-name: chuteFeuille;
-  animation-timing-function: linear;
-  animation-iteration-count: 1;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
 }
-@keyframes chuteFeuille {
-  0%   { transform: translateY(-40px) rotate(0deg) translateX(0); opacity: 0; }
-  10%  { opacity: 0.55; }
-  50%  { transform: translateY(50vh) rotate(180deg) translateX(40px); }
-  90%  { opacity: 0.45; }
-  100% { transform: translateY(105vh) rotate(360deg) translateX(-30px); opacity: 0; }
+.navbar-brand { font-size: 1.5rem; color: white; text-decoration: none; }
+.nav-link { color: white; margin: 0 10px; text-decoration: none; }
+
+.card {
+  border-radius: var(--radius);
+  border: 1px solid rgba(74,124,89,0.2);
+  box-shadow: var(--shadow);
+  background: var(--white);
+  padding: 20px;
+  margin: 20px 0;
 }
 
-/* Balancement doux (icônes feuilles) */
-@keyframes sway {
-  0%, 100% { transform: rotate(-8deg); }
-  50%      { transform: rotate(10deg); }
+.btn {
+  border-radius: var(--btn-radius);
+  padding: 10px 20px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.btn-primary { background-color: var(--primary); color: white; }
+.btn-success { background-color: var(--success); color: white; }
+.btn-warning { background-color: var(--warning); color: white; }
+.btn-danger { background-color: var(--danger); color: white; }
+
+table { border-collapse: separate; border-spacing: 0; width: 100%; border-radius: var(--radius); overflow: hidden; }
+th { background: var(--primary); color: white; }
+tr:nth-child(even) { background: var(--cream); }
+td, th { padding: 12px; text-align: left; }
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary-light) !important;
+  box-shadow: 0 0 0 3px rgba(124,179,66,0.3) !important;
 }
 
-/* Pousse de plante : apparition des cartes au chargement */
-.card, .display-4 {
-  animation: pousse 0.5s ease-out backwards;
-}
-.card:nth-child(2) { animation-delay: 0.08s; }
-.card:nth-child(3) { animation-delay: 0.16s; }
-@keyframes pousse {
-  from { opacity: 0; transform: translateY(14px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+.toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--success); color: white;
+  padding: 15px 25px; border-radius: var(--radius);
+  display: none; z-index: 9999;
 }
 
-/* --------------------------------------------------------------------------
-   Page de connexion : ambiance jardin
-   -------------------------------------------------------------------------- */
-.login-plante-icone {
-  color: var(--vert-moyen);
-  animation: sway 3.5s ease-in-out infinite;
-  display: inline-block;
-  transform-origin: bottom center;
-}
-
-/* --------------------------------------------------------------------------
-   Formulaires
-   -------------------------------------------------------------------------- */
-.form-control, .form-select {
-  border-radius: 0.75rem;
-  border-color: var(--vert-pale);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-}
-.form-control:focus, .form-select:focus {
-  border-color: var(--vert-clair);
-  box-shadow: 0 0 0 0.25rem rgba(116, 198, 157, 0.25);
-}
-
-/* Suggestions d'autocomplétion produit */
-#produitSuggestions {
-  background: #fff;
-  border-radius: 0 0 0.75rem 0.75rem;
-  border: 1px solid var(--vert-pale);
-  border-top: none;
-}
-#produitSuggestions .list-group-item { cursor: pointer; }
-#produitSuggestions .list-group-item:hover {
-  background-color: var(--vert-tres-pale);
-}
-
-/* --------------------------------------------------------------------------
-   Mobile : boutons tactiles larges
-   -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
-  .btn-lg { padding: 0.85rem 1.1rem; font-size: 1.05rem; }
-  .navbar-nav .nav-link { font-size: 1.05rem; }
+  .btn { width: 100%; margin: 5px 0; }
+  .card { margin: 10px 0; }
 }
