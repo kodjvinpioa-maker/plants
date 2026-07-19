@@ -11,8 +11,8 @@
 <body>
   <nav class="navbar">
     <a class="navbar-brand" href="/dashboard">🏪 MaBoutique</a>
-    <span style="color:white;">
-      <% if (user) { %>
+    <div>
+      <% if (locals.user) { %>
         <a class="nav-link" href="/dashboard"><i class="fa fa-home"></i> Accueil</a>
         <a class="nav-link" href="/produits"><i class="fa fa-box"></i> Produits</a>
         <a class="nav-link" href="/vente"><i class="fa fa-cash-register"></i> Vente</a>
@@ -26,24 +26,24 @@
         <a class="nav-link" href="/chatbot"><i class="fa fa-leaf"></i> Assistant Plantes</a>
         <a class="nav-link" href="/logout"><i class="fa fa-sign-out-alt"></i> Déconnexion</a>
       <% } else { %>
-        <a class="nav-link" href="/login">Connexion</a>
+        <a class="nav-link" href="/login"><i class="fa fa-sign-in-alt"></i> Connexion</a>
       <% } %>
-    </span>
+    </div>
   </nav>
 
-  <div class="container" style="max-width: 1200px; margin: auto; padding: 20px;">
+  <div class="container">
     <%- body %>
   </div>
 
-  <div id="toast" class="toast">Message</div>
+  <div id="toast" class="toast"></div>
   <script>
-    // Affichage toast
-    function showToast(message, type = 'success') {
+    function showToast(message, type) {
+      type = type || 'success';
       const toast = document.getElementById('toast');
       toast.textContent = message;
       toast.style.background = type === 'success' ? '#388E3C' : '#D32F2F';
       toast.style.display = 'block';
-      setTimeout(() => toast.style.display = 'none', 3000);
+      setTimeout(function() { toast.style.display = 'none'; }, 3000);
     }
   </script>
 </body>
